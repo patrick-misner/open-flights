@@ -46,7 +46,7 @@ module Api
       params.require(:airline).permit(:name, :image_url)
     end
 
-    def option
+    def options
       @options ||= { include: %i[reviews] }
     end
   end
