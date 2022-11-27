@@ -5,18 +5,17 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
+import { createRoot } from 'react-dom/client'
 import App from '../components/App.js';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
 document.addEventListener('DOMContentLoaded', () => {
-  ReactDOM.render(
+  createRoot(document.getElementById('root')).render(
     <BrowserRouter>
 
       <Routes>
         <Route path="*" element={<App />} />
       </Routes>,
-    </BrowserRouter>,
-
-    document.body.appendChild(document.createElement('div')),
+    </BrowserRouter>
   )
 })
