@@ -29,6 +29,7 @@ const Main = styled.div`
 
 const Airline = () => {
   const [airline, setAirline] = useState({})
+  const [reviews, setReviews] = useState([])
   const [review, setReview] = useState({})
   const [loaded, setLoaded] = useState(false)
   const { slug } = useParams()
@@ -41,6 +42,7 @@ const Airline = () => {
     axios.get(url)
       .then(resp => {
         setAirline(resp.data)
+        setReviews(resp.data.included)
         setLoaded(true)
       })
       .catch(resp => console.log(resp))
@@ -64,6 +66,7 @@ const Airline = () => {
       .then(resp => {
         const included = [...airline.included, resp.data.data]
         setAirline({ ...airline, included })
+        setReviews([...reviews, resp.data.data])
         setReview({ title: '', description: '', score: 0 })
       })
       .catch(resp => { })
@@ -75,17 +78,25 @@ const Airline = () => {
     setReview({ ...review, score })
   }
 
-  let reviews
-  if (loaded && airline.included) {
-    reviews = airline.included.map((item, index) => {
-      return (
-        <Review
-          key={index}
-          attributes={item.attributes}
-        />
-      )
-    })
+  let total, average = 0
+  let userReviews
+
+  if (reviews && reviews.length > 0) {
+    total = reviews.reduce((total, review) => total + review.attributes.score, 0)
+    average = total > 0 ? (parseFloat(total) / parseFloat(reviews.length)) : 0
   }
+
+
+  userReviews = reviews.map((review, index) => {
+    return (
+      <Review
+        key={index}
+        id={review.id}
+        attributes={review.attributes}
+      />
+    )
+  })
+
 
   return (
     <Wrapper>
@@ -97,10 +108,11 @@ const Airline = () => {
 
               <Header
                 attributes={airline.data.attributes}
-                reviews={airline.included}
+                reviews={reviews}
+                average={average}
               />
 
-              {reviews}
+              {userReviews}
             </Main>
           </Column>
           <Column>
