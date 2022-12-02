@@ -10,7 +10,7 @@
   left: 0;
   overflow: hidden;
   white-space: nowrap;
-  color: yellow;
+  color: #ffc315;
 }
 
 .star-wrapper::before,
